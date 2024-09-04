@@ -1,12 +1,19 @@
 ---
 
+- name: Identify the Git repo transport protocol
+  set_fact:
+    _gcr_repo_protocol_http: "{{ gcr_ztp_gitops_repo | regex_search('https?://') | type_debug == 'str' }}"
+
 - name: Assert the required variables are defined
   ansible.builtin.assert:
     that:
-      - gcr_ssh_key_path is defined
-      - gcr_ssh_key_path | length > 0
       - gcr_ztp_gitops_repo is defined
       - gcr_ztp_gitops_repo | length > 0
+      - >
+          (_gcr_repo_protocol_http and
+          gcr_repo_username is defined and gcr_repo_username | length > 0 and
+          gcr_repo_password is defined and gcr_repo_password | length > 0) or
+          (gcr_ztp_gitops_repo gcr_ssh_key_path is defined and gcr_ssh_key_path | length > 0)
 
 - name: Add ssh_known_hosts to ArgoCD
   community.kubernetes.k8s:
