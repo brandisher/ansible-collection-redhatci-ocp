@@ -5,19 +5,19 @@ metadata:
   namespace: {{ ecd_cnf_namespace }}
 spec:
   privileged: false
-  imagePullPolicy: {{ image_pull_policy }}
-{% if enable_lb|bool %}
-  ethpeerMaclist: {{ lb_cnf_port_mac_list }}
-  size: {{ testpmd_app_size|default(2) }}
+  imagePullPolicy: {{ ecd_image_pull_policy }}
+{% if ecd_enable_lb|bool %}
+  ethpeerMaclist: {{ ecd_lb_cnf_port_mac_list }}
+  size: {{ ecd_testpmd_app_size|default(2) }}
 {% else %}
-  ethpeerMaclist: {{ trex_mac_list }}
+  ethpeerMaclist: {{ ecd_trex_mac_list }}
   size: 1  
 {% endif %}
   networks: {{ ecd_networks_testpmd_app }}
-  terminationGracePeriodSeconds: {{ termination_grace_period_seconds }}
-{% if high_perf_runtime is defined and high_perf_runtime|length %}
-  runtime_class_name: "{{ high_perf_runtime }}"
+  terminationGracePeriodSeconds: {{ ecd_termination_grace_period_seconds }}
+{% if ecd_high_perf_runtime is defined and ecd_high_perf_runtime|length %}
+  runtime_class_name: "{{ ecd_high_perf_runtime }}"
 {% endif %}
-{% if numa_aware_topology is defined and numa_aware_topology | length %}
-  numa_aware_topology: "{{ numa_aware_topology }}"
+{% if ecd_numa_aware_topology is defined and ecd_numa_aware_topology | length %}
+  numa_aware_topology: "{{ ecd_numa_aware_topology }}"
 {% endif %}

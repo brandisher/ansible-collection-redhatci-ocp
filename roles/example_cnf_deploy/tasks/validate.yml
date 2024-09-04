@@ -1,4 +1,5 @@
 ---
+# TODO
 #### Migrate ####
 - name: "Get TestPMD CR info"
   community.kubernetes.k8s_info:
@@ -20,13 +21,13 @@
     field_selectors:
       - reason==PacketMatched
   register: _ecd_matched
-  when: trex_tests_skip_failures|bool
+  when: ecd_trex_tests_skip_failures|bool
 
 - name: "Do not try migration tests if previous TRex job failed"
   ansible.builtin.set_fact:
     ecd_try_running_migration_tests: false
   when:
-    - trex_tests_skip_failures|bool
+    - ecd_trex_tests_skip_failures|bool
     - _ecd_matched.resources is defined
     - _ecd_matched.resources|length == 0
 
@@ -44,14 +45,9 @@
       delay: 5
       until: _ecd_matched.resources | length > 0
 
-    - name: "Fail if Kubeconfig path if not available"
-      ansible.builtin.fail:
-        msg: "Failed to find kubeconfig"
-      when: "kubeconfig_path | default('') | length == 0"
-
     - name: "Run pod deletion test"
       ansible.builtin.include_tasks: pod-delete.yml
-      when: "validate_pod_delete | default(true) | bool"
+      when: "ecd_validate_pod_delete | default(true) | bool"
 
 #### Validate ####
 - name: "Set event list variable"

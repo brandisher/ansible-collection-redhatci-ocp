@@ -6,6 +6,7 @@
     label_selectors:
       - example-cnf-type=cnf-app
   register: _ecd_cnf_pod
+
 - name: "Fail if the cnf app pod is not found"
   ansible.builtin.fail:
     msg: "Unable to find cnf app pod"
@@ -25,8 +26,7 @@
 
 - name: "Cordon the node"
   ansible.builtin.shell: |
-    export KUBECONFIG={{ kubeconfig_path }}
-    {{ oc_tool_path }} adm cordon {{ ecd_cnf_existing_node }}
+    {{ ecd_oc_path }} adm cordon {{ ecd_cnf_existing_node }}
 
 - name: Delete the cnf app pod
   community.kubernetes.k8s:
@@ -61,8 +61,7 @@
 
 - name: "Uncordon the node"
   ansible.builtin.shell: |
-    export KUBECONFIG={{ kubeconfig_path }}
-    {{ oc_tool_path }} adm uncordon {{ ecd_cnf_existing_node }}
+    {{ ecd_oc_path }} adm uncordon {{ ecd_cnf_existing_node }}
 
 - name: "Fail if TestPMD pod is not migrated"
   ansible.builtin.fail:

@@ -124,7 +124,7 @@
       vars:
         _ecd_trex_retrieved_duration: "{{ _ecd_trex_app_cr.resources[0].spec.duration }}"
       ansible.builtin.set_fact:
-        ecd_trex_duration: "{{ (_ecd_trex_retrieved_duration == -1)|ternary(default_trex_duration,trex_retrieved_duration) }}"
+        ecd_trex_duration: "{{ (_ecd_trex_retrieved_duration == -1)|ternary(ecd_default_trex_duration,trex_retrieved_duration) }}"
 
 - name: "Wait for the TRex app TestCompleted event"
   community.kubernetes.k8s_info:

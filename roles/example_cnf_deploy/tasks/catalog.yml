@@ -18,7 +18,7 @@
 - name: "Inspect index image"
   ansible.builtin.shell:
     cmd: >
-      skopeo inspect docker://{{ catalog_image }}
+      skopeo inspect docker://{{ ecd_catalog_image }}
   register: _ecd_skopeo_inspect
   until: _ecd_skopeo_inspect.rc == 0
   retries: 5
@@ -32,8 +32,12 @@
   ansible.builtin.include_role:
     name: redhatci.ocp.catalog_source
   vars:
-    cs_name: "{{ catalog_name }}"
+    cs_name: "{{ ecd_catalog_name }}"
     cs_namespace: "openshift-marketplace"
-    cs_image: "{{ registry_url }}/{{ repo_name }}/{{ catalog_name }}@{{ ecd_index_digest }}"
+    cs_image: "{{ ecd_registry_url }}/{{ ecd_repo_name }}/{{ ecd_catalog_name }}@{{ ecd_index_digest }}"
     cs_publisher: "Red Hat"
+    cs_update_strategy:
+      registryPoll:
+        interval: 30m
+
 ...

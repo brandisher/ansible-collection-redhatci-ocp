@@ -4,10 +4,10 @@
     ecd_trex_app_cr_name: trex-app
   when: ecd_trex_app_cr_name is not defined
 
-- name: "Update ecd_trex_continuous_mode if trex_duration is set to -1"
+- name: "Update ecd_trex_continuous_mode if ecd_trex_duration is set to -1"
   ansible.builtin.set_fact:
     ecd_trex_continuous_mode: true
-  when: trex_duration == -1
+  when: ecd_trex_duration == -1
 
 - name: "Deploy TRex app"
   block:
@@ -19,8 +19,8 @@
       ansible.builtin.fail:
         msg: "TRex App run has failed"
       when:
-        - not trex_app_run_passed | bool
-        - not trex_tests_skip_failures|bool
+        - not ecd_trex_app_run_passed | bool
+        - not ecd_trex_tests_skip_failures|bool
         - not ecd_trex_continuous_mode|bool
   always:
     - name: "Retrieve TRex app logs"
@@ -32,14 +32,11 @@
       register: _ecd_trex_app_logs
       ignore_errors: true
 
-    - name: "Store logs when jobs_logs is defined"
+    - name: "Store logs"
       ansible.builtin.copy:
         content: "{{ _ecd_trex_app_logs.log }}"
-        dest: "{{ job_logs.path }}/{{ ecd_trex_app_cr_name }}.log"
+        dest: "{{ ecd_job_logs_path }}/{{ ecd_trex_app_cr_name }}.log"
         mode: "0750"
-      when:
-        - job_logs is defined
-        - job_logs.path is defined
-        - not _ecd_trex_app_logs.failed
+      when: not _ecd_trex_app_logs.failed
       ignore_errors: true
 ...
