@@ -3,7 +3,7 @@
   ansible.builtin.assert:
     that:
       - ecd_action is defined
-      - ecd_action in ['deploy', 'validate', 'draining', 'catalog']
+      - ecd_action in ['catalog', 'deploy', 'validate', 'deploy_extra_trex', 'draining']
 
 - name: "Deploy Example CNF catalog"
   ansible.builtin.include_tasks: catalog.yml
@@ -16,6 +16,10 @@
 - name: "Validate Example CNF App"
   ansible.builtin.include_tasks: validate.yml
   when: ecd_action == 'validate'
+
+- name: "Deploy an extra TRex job"
+  ansible.builtin.include_tasks: deploy_extra_trex.yml
+  when: ecd_action == 'deploy_extra_trex'
 
 - name: "Drain - Example CNF"
   ansible.builtin.include_tasks: draining.yml
