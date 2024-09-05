@@ -111,8 +111,5 @@ ecd_trex_job_failed: false
 ## If set to true, even if TRex job fails, the job will progress
 ecd_trex_tests_skip_failures: false
 
-## If set to true, even if TRex job fails, the job will progress
-ecd_trex_tests_skip_failures: false
-
 ## The idea is always to try to run the migration test, unless TRex job failed before
 ecd_try_running_migration_tests: true
